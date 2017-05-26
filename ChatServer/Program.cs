@@ -33,6 +33,9 @@ using Com.Example.Grpc.Chat;
 
 namespace GreeterServer
 {
+    /// <summary>
+    /// Program, main entry
+    /// </summary>
     class Program
     {
         const string Host = "localhost";
