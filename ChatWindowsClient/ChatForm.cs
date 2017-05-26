@@ -31,6 +31,9 @@ using System;
 using System.Windows.Forms;
 using Com.Example.Grpc.Chat;
 using System.Threading;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace ChatWindowsClient
 {
@@ -38,8 +41,8 @@ namespace ChatWindowsClient
     {
         private const string Host = "localhost";
         private const int Port = 8080;
-  
-        private ChatService.ChatServiceClient _chatService;
+
+        private AsyncDuplexStreamingCall<ChatMessage, ChatMessageFromServer> _call;
 
         public ChatForm()
         {
@@ -49,37 +52,23 @@ namespace ChatWindowsClient
 
         private void InitializeGrpc()
         {
-            // Create a channel
             var channel = new Channel(Host + ":" + Port, ChannelCredentials.Insecure);
 
             // Create a client with the channel
-            _chatService = new ChatService.ChatServiceClient(channel);
-        }
+            var chatService = new ChatService.ChatServiceClient(channel);
 
-        private async void ChatForm_Load(object sender, EventArgs e)
-        {
-            try
-            {
-                // Open a connection to the server
-                using (var call = _chatService.chat())
-                {
-                    while (await call.ResponseStream.MoveNext(CancellationToken.None))
-                    {
-                        var serverMessage = call.ResponseStream.Current;
-                        var otherClientMessage = serverMessage.Message;
-                        var displayMessage = string.Format("{0}:{1}{2}", otherClientMessage.From, otherClientMessage.Message, Environment.NewLine);
-                        chatTextBox.Text += displayMessage;
-                    }
-                }
-            }
-            catch (RpcException)
-            {
-                throw;
-            }
+            // Open a connection to server
+            _call = chatService.chat();
+
         }
 
         private async void sendButton_Click(object sender, EventArgs e)
         {
+            if (String.IsNullOrWhiteSpace(nameTextBox.Text))
+            {
+                return;
+            }
+
             // Create a message
             var message = new ChatMessage
             {
@@ -87,19 +76,57 @@ namespace ChatWindowsClient
                 Message = messageTextBox.Text
             };
 
+            // Didable changing name.
+            nameTextBox.Enabled = false;
+            messageTextBox.Text = "";
+
             try
             {
+
                 // Send the message
-                using (var call = _chatService.chat())
+                await _call.RequestStream.WriteAsync(message);
+                Debug.WriteLine("WriteAsync complete");
+            }
+            catch (RpcException ex)
+            {
+                Debug.WriteLine($"RpcException {ex}");
+            }
+        }
+
+        // Async task. Stay in "backgroud".
+        private async void ChatForm_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                // Wait for results from server
+                // When connection is closed, the loop exits.
+                while (await _call.ResponseStream.MoveNext(CancellationToken.None))
                 {
-                    await call.RequestStream.WriteAsync(message);
-                    await call.RequestStream.CompleteAsync();
+                    var serverMessage = _call.ResponseStream.Current;
+                    var otherClientMessage = serverMessage.Message;
+                    var displayMessage = string.Format("{0}:{1}{2}", otherClientMessage.From, otherClientMessage.Message, Environment.NewLine);
+                    chatTextBox.Text += displayMessage;
                 }
             }
-            catch (RpcException)
+            catch (RpcException ex)
             {
-                throw;
+                Debug.WriteLine($"RpcException {ex}");
+                MessageBox.Show($"ResponseStream received exception\r\n{ex}");
+                this.Close();
             }
+
+            Debug.WriteLine("ChatForm_Load async stopped");
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            // Close connection
+            var task = _call.RequestStream.CompleteAsync();
+            Debug.WriteLine("Wait completeAsync");
+            task.Wait();
+            Debug.WriteLine("completeAsync complete");
+
+            base.OnClosing(e);
         }
     }
 }

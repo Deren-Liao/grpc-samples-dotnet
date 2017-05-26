@@ -29,38 +29,61 @@
 using Com.Example.Grpc.Chat;
 using Grpc.Core;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
+using static System.Console;
 
 namespace GreeterServer
 {
     public class ChatServiceImpl : ChatService.ChatServiceBase
     {
-        private static HashSet<IServerStreamWriter<ChatMessageFromServer>> responseStreams = new HashSet<IServerStreamWriter<ChatMessageFromServer>>();
+        private static long _id = 0;
+        private static ConcurrentDictionary<long, IServerStreamWriter<ChatMessageFromServer>> s_responseStreams 
+            = new ConcurrentDictionary<long, IServerStreamWriter<ChatMessageFromServer>>();
 
-        public override async Task chat(IAsyncStreamReader<ChatMessage> requestStream,
+        public override async Task chat(
+            IAsyncStreamReader<ChatMessage> requestStream,
             IServerStreamWriter<ChatMessageFromServer> responseStream,
             ServerCallContext context)
         {
-            // Keep track of connected clients
-            responseStreams.Add(responseStream);
-
-            while (await requestStream.MoveNext(CancellationToken.None))
+            long id = ++_id;
+            WriteLine($"New streaming request [{_id}]:");
+            s_responseStreams.TryAdd(id, responseStream);
+            try
             {
-                // Get the client message from the request stream
-                var messageFromClient = requestStream.Current;
-
-                // Create a server message that wraps the client message
-                var message = new ChatMessageFromServer
+                while (await requestStream.MoveNext(CancellationToken.None))
                 {
-                    Message = messageFromClient
-                };
+                    // Get the client message from the request stream
+                    var messageFromClient = requestStream.Current;
+                    WriteLine($"Received new request [{_id}]: {messageFromClient.From}");
 
-                // Send to connected clients
-                foreach (var stream in responseStreams)
-                {
-                    await stream.WriteAsync(message);
+                    // Create a server message that wraps the client message
+                    var message = new ChatMessageFromServer
+                    {
+                        Message = messageFromClient
+                    };
+
+                    foreach (var streamKvp in s_responseStreams)
+                    {
+                        try
+                        {
+                            // Send to connected clients
+                            await streamKvp.Value.WriteAsync(message);
+                        }
+                        catch (RpcException ex)
+                        {
+                            // TODO: remove the key from list.
+                            WriteLine($"Write error [{streamKvp.Key}]: {ex}");
+                        }
+                    }
                 }
+            }
+            finally
+            {
+                WriteLine($"Exit streaming request [{_id}]:");
+                IServerStreamWriter<ChatMessageFromServer> dummy;
+                s_responseStreams.TryRemove(id, out dummy);
             }
         }
     }

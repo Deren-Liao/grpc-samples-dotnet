@@ -29,6 +29,7 @@
 using Com.Example.Grpc;
 using Grpc.Core;
 using System.Threading.Tasks;
+using static System.Console;
 
 namespace GreeterServer
 {
@@ -36,6 +37,9 @@ namespace GreeterServer
     {
         public override Task<HelloResponse> greeting(HelloRequest request, ServerCallContext context)
         {
+            WriteLine("Received greeting");
+            WriteLine($"{request.ToString()}");
+            WriteLine();
             return Task.FromResult(new HelloResponse { Greeting = "Hello " + request.Name });
         }
     }
