@@ -48,8 +48,8 @@ namespace GreeterClient
 
             // Create a request
             var request = new HelloRequest{
-                Name = "Mete - on C#",
-                Age = 34,
+                Name = "Deren - on C#",
+                Age = 10,
                 Sentiment = Sentiment.Happy
             };
 
@@ -61,8 +61,8 @@ namespace GreeterClient
 
             // Shutdown
             channel.ShutdownAsync().Wait();
-            Console.WriteLine("Press any key to exit...");
-            Console.ReadKey();
+            Console.WriteLine("Press key 'X' to exit...");
+            while (Console.ReadKey().Key != ConsoleKey.X) { }
         }
     }
 }

@@ -29,7 +29,6 @@
 
 syntax = "proto3";
 
-//import "google/protobuf/timestamp.proto";
 package com.example.grpc.chat;
 
 message ChatMessage {
@@ -38,7 +37,6 @@ message ChatMessage {
 }
 
 message ChatMessageFromServer {
-    //google.protobuf.Timestamp timestamp = 1;
     ChatMessage message = 2;
 }
 
