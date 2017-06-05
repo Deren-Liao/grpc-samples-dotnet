@@ -69,42 +69,46 @@ namespace ChatWindowsClient
             this.chatTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.chatTextBox.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.chatTextBox.Location = new System.Drawing.Point(34, 33);
-            this.chatTextBox.Margin = new System.Windows.Forms.Padding(2);
+            this.chatTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chatTextBox.Location = new System.Drawing.Point(45, 41);
+            this.chatTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.chatTextBox.Multiline = true;
             this.chatTextBox.Name = "chatTextBox";
             this.chatTextBox.ReadOnly = true;
-            this.chatTextBox.Size = new System.Drawing.Size(575, 288);
+            this.chatTextBox.Size = new System.Drawing.Size(809, 363);
             this.chatTextBox.TabIndex = 0;
             // 
             // nameTextBox
             // 
-            this.nameTextBox.Location = new System.Drawing.Point(19, 22);
-            this.nameTextBox.Margin = new System.Windows.Forms.Padding(2);
+            this.nameTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.nameTextBox.Location = new System.Drawing.Point(6, 19);
+            this.nameTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.nameTextBox.Multiline = true;
             this.nameTextBox.Name = "nameTextBox";
-            this.nameTextBox.Size = new System.Drawing.Size(114, 23);
+            this.nameTextBox.Size = new System.Drawing.Size(151, 42);
             this.nameTextBox.TabIndex = 1;
             this.nameTextBox.Text = "Name";
             // 
             // messageTextBox
             // 
             this.messageTextBox.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.messageTextBox.Location = new System.Drawing.Point(144, 22);
-            this.messageTextBox.Margin = new System.Windows.Forms.Padding(2);
+            this.messageTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.messageTextBox.Location = new System.Drawing.Point(202, 19);
+            this.messageTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.messageTextBox.Multiline = true;
             this.messageTextBox.Name = "messageTextBox";
-            this.messageTextBox.Size = new System.Drawing.Size(279, 23);
+            this.messageTextBox.Size = new System.Drawing.Size(371, 43);
             this.messageTextBox.TabIndex = 2;
             this.messageTextBox.Text = "Message";
             // 
             // sendButton
             // 
             this.sendButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.sendButton.Location = new System.Drawing.Point(435, 22);
-            this.sendButton.Margin = new System.Windows.Forms.Padding(2);
+            this.sendButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.sendButton.Location = new System.Drawing.Point(656, 19);
+            this.sendButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.sendButton.Name = "sendButton";
-            this.sendButton.Size = new System.Drawing.Size(93, 23);
+            this.sendButton.Size = new System.Drawing.Size(124, 42);
             this.sendButton.TabIndex = 3;
             this.sendButton.Text = "Send";
             this.sendButton.UseVisualStyleBackColor = true;
@@ -118,22 +122,22 @@ namespace ChatWindowsClient
             this.groupBox1.Controls.Add(this.nameTextBox);
             this.groupBox1.Controls.Add(this.sendButton);
             this.groupBox1.Controls.Add(this.messageTextBox);
-            this.groupBox1.Location = new System.Drawing.Point(34, 327);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
+            this.groupBox1.Location = new System.Drawing.Point(45, 402);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox1.Size = new System.Drawing.Size(573, 59);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.groupBox1.Size = new System.Drawing.Size(855, 76);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             // 
             // ChatForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(640, 411);
+            this.ClientSize = new System.Drawing.Size(897, 489);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.chatTextBox);
-            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "ChatForm";
             this.Text = "gRPC Chat Client";
             this.Load += new System.EventHandler(this.ChatForm_Load);

@@ -52,13 +52,12 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <None Include="..\generate_protos.bat">
-      <Link>generate_protos.bat</Link>
-    </None>
     <None Include="packages.config" />
     <None Include="protos\greeter.proto" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="generate_protos.bat" />
+  </ItemGroup>
   <Import Project="..\packages\Grpc.Core.1.0.1\build\net45\Grpc.Core.targets" Condition="Exists('..\packages\Grpc.Core.1.0.1\build\net45\Grpc.Core.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -66,4 +65,8 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Grpc.Core.1.0.1\build\net45\Grpc.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Grpc.Core.1.0.1\build\net45\Grpc.Core.targets'))" />
   </Target>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
 </Project>
